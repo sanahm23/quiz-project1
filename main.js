@@ -1,4 +1,4 @@
-var questions = [
+let questions = [
   {
     question: "When was javascript invented?",
     choices: ["1995", "1994", "1996", "None of above"],
@@ -21,17 +21,41 @@ var questions = [
   }
 ];
 
-var currentQuestion = 0;
-var score = 0;
-const submit = document.getElementById('submit')
 
+let formSubmit = document.getElementById('formsubmit')
+let box = document.getElementById('box')
+let boxQuiz = document.getElementById('box-quiz')
+let usernameInput = document.getElementById("username");
+let userEmail = document.getElementById("emailId");
+// function validateEmail(email) {
+//     var regex = /^[A-Za-z\._\-0-9]*[@][A-Za-z]*[\.][a-z]{2,4}$/;
+//     return regex.test(email);
+//   }
+
+
+formSubmit.addEventListener("submit", function (event) {
+  event.preventDefault();
+  let username = usernameInput.value;
+  let email = userEmail.value;
+  localStorage.setItem(username, email);
+  sessionStorage.setItem(username, email);
+  userDisplay.textContent = username;
+  box.style.display = "none";
+  boxQuiz.style.display = "block";
+
+});
+//------------------------------------------------------------------------------------------------------------->
+
+let currentQuestion = 0;
+let score = 0;
+let submit = document.getElementById('submit')
 function loadQuestion() {
-  var questionElement = document.getElementById("question");
-  var choiceElements = document.getElementsByTagName("span");
+  let questionElement = document.getElementById("question");
+  let choiceElements = document.getElementsByTagName("span");
 
   questionElement.textContent = questions[currentQuestion].question;
 
-  for (var i = 0; i < choiceElements.length; i++) {
+  for (let i = 0; i < choiceElements.length; i++) {
     choiceElements[i].textContent = questions[currentQuestion].choices[i];
   }
 }
@@ -39,10 +63,10 @@ function loadQuestion() {
 
 submit.addEventListener("click", () => {
 
-  var choices = document.getElementsByName("choice");
-  var selectedChoice = -1;
+  let choices = document.getElementsByName("choice");
+  let selectedChoice = -1;
 
-  for (var i = 0; i < choices.length; i++) {
+  for (let i = 0; i < choices.length; i++) {
     if (choices[i].checked) {
       selectedChoice = parseInt(choices[i].value);
       break;
@@ -72,7 +96,7 @@ submit.addEventListener("click", () => {
   }
 
 
-  for (var i = 0; i < choices.length; i++) {
+  for (let i = 0; i < choices.length; i++) {
     choices[i].checked = false;
   }
 
@@ -80,9 +104,9 @@ submit.addEventListener("click", () => {
 })
 
 function shuffleQuestions() {
-  for (var i = questions.length - 1; i > 0; i--) {
-    var j = Math.floor(Math.random() * (i + 1));
-    var temp = questions[i];
+  for (let i = questions.length - 1; i > 0; i--) {
+    let j = Math.floor(Math.random() * (i + 1));
+    let temp = questions[i];
     questions[i] = questions[j];
     questions[j] = temp;
   }
@@ -90,4 +114,3 @@ function shuffleQuestions() {
 
 shuffleQuestions();
 loadQuestion();
-
