@@ -27,23 +27,32 @@ let box = document.getElementById('box')
 let boxQuiz = document.getElementById('box-quiz')
 let usernameInput = document.getElementById("username");
 let userEmail = document.getElementById("emailId");
-// function validateEmail(email) {
-//     var regex = /^[A-Za-z\._\-0-9]*[@][A-Za-z]*[\.][a-z]{2,4}$/;
-//     return regex.test(email);
-//   }
-
+let prev = document.getElementById("prevB");
 
 formSubmit.addEventListener("submit", function (event) {
   event.preventDefault();
+
+  for (let i = 0; i < localStorage.length; i++) {
+    let email = userEmail.value;
+    if (email == localStorage.key(i)) {
+      let a = localStorage.getItem(email)
+
+      quiz.innerHTML = `<h2>You answered ${a} out of ${questions.length} correctly!!</h2>
+      <button onclick = "location.reload()">Reload</button>`;
+    }
+  }
+
   let username = usernameInput.value;
   let email = userEmail.value;
-  localStorage.setItem(username, email);
-  sessionStorage.setItem(username, email);
+
   userDisplay.textContent = username;
   box.style.display = "none";
   boxQuiz.style.display = "block";
 
+
 });
+
+
 //------------------------------------------------------------------------------------------------------------->
 
 let currentQuestion = 0;
@@ -58,10 +67,17 @@ function loadQuestion() {
   for (let i = 0; i < choiceElements.length; i++) {
     choiceElements[i].textContent = questions[currentQuestion].choices[i];
   }
+    if (currentQuestion == 0) {
+    prev.style.display = "none";
+  } else {
+    prev.style.display = "inline-flex";
+  }
 }
 
 
-submit.addEventListener("onclick", () => {
+
+
+submit.addEventListener("click", () => {
 
   let choices = document.getElementsByName("choice");
   let selectedChoice = -1;
@@ -80,11 +96,32 @@ submit.addEventListener("onclick", () => {
 
   if (selectedChoice == questions[currentQuestion].answer) {
     score++;
+
   }
 
   currentQuestion++;
 
-  if (currentQuestion === questions.length) {
+
+   if (currentQuestion === questions.length) {
+    let email=userEmail.value
+    localStorage.setItem(email, score)
+    quiz.innerHTML = `<h2>You answered ${score} out of ${questions.length} correctly!!</h2>
+      <button onclick = "location.reload()">Reload</button>`;
+  } else {
+    loadQuestion();
+  }
+
+  for (var i = 0; i < choices.length; i++) {
+    choices[i].checked = false
+    
+  }
+});
+
+function showPreviousQuestion() {
+  currentQuestion--;
+  loadQuestion();
+}
+ if (currentQuestion === questions.length) {
 
     quiz.innerHTML = `<h2>You answered ${score} out of ${questions.length} correctly</h2>
     <button onclick = "location.reload()">Reload</button>`
@@ -100,8 +137,8 @@ submit.addEventListener("onclick", () => {
     choices[i].checked = false;
   }
 
+prev.addEventListener("click",showPreviousQuestion)
 
-})
 
 function shuffleQuestions() {
   for (let i = questions.length - 1; i > 0; i--) {
