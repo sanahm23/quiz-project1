@@ -21,13 +21,13 @@ let questions = [
   }
 ];
 
-
 let formSubmit = document.getElementById('formsubmit')
 let box = document.getElementById('box')
 let boxQuiz = document.getElementById('box-quiz')
 let usernameInput = document.getElementById("username");
 let userEmail = document.getElementById("emailId");
 let prev = document.getElementById("prevB");
+let userDisplay = document.getElementById("userDisplay")
 
 formSubmit.addEventListener("submit", function (event) {
   event.preventDefault();
@@ -48,39 +48,44 @@ formSubmit.addEventListener("submit", function (event) {
   userDisplay.textContent = username;
   box.style.display = "none";
   boxQuiz.style.display = "block";
-
-
 });
-
 
 //------------------------------------------------------------------------------------------------------------->
 
 let currentQuestion = 0;
 let score = 0;
+let userChoices = [];
+
 let submit = document.getElementById('submit')
 function loadQuestion() {
   let questionElement = document.getElementById("question");
   let choiceElements = document.getElementsByTagName("span");
 
   questionElement.textContent = questions[currentQuestion].question;
+  var previousAnswer = userChoices[currentQuestion];
+  if (previousAnswer !== undefined) {
+    var choices = document.getElementsByName("choice");
+    choices[previousAnswer].checked = true;
+  }
 
   for (let i = 0; i < choiceElements.length; i++) {
     choiceElements[i].textContent = questions[currentQuestion].choices[i];
+
   }
-    if (currentQuestion == 0) {
+
+
+  if (currentQuestion == 0) {
     prev.style.display = "none";
   } else {
     prev.style.display = "inline-flex";
   }
+  // sessionStorage.setItem(currentQuestion);
 }
-
-
-
 
 submit.addEventListener("click", () => {
 
   let choices = document.getElementsByName("choice");
-  let selectedChoice = -1;
+  var selectedChoice = -1;
 
   for (let i = 0; i < choices.length; i++) {
     if (choices[i].checked) {
@@ -89,6 +94,7 @@ submit.addEventListener("click", () => {
     }
   }
 
+
   if (selectedChoice == -1) {
     alert("Please select an option.");
     return;
@@ -96,14 +102,18 @@ submit.addEventListener("click", () => {
 
   if (selectedChoice == questions[currentQuestion].answer) {
     score++;
+    // selectedChoice.disabled = true;
+    // localStorage.setItem(choices)
+
 
   }
+  userChoices[currentQuestion] = selectedChoice;
 
   currentQuestion++;
 
 
-   if (currentQuestion === questions.length) {
-    let email=userEmail.value
+  if (currentQuestion === questions.length) {
+    let email = userEmail.value
     localStorage.setItem(email, score)
     quiz.innerHTML = `<h2>You answered ${score} out of ${questions.length} correctly!!</h2>
       <button onclick = "location.reload()">Reload</button>`;
@@ -111,33 +121,35 @@ submit.addEventListener("click", () => {
     loadQuestion();
   }
 
-  for (var i = 0; i < choices.length; i++) {
+  for (let i = 0; i < choices.length; i++) {
     choices[i].checked = false
-    
+    if (userChoices[currentQuestion] !== undefined) {
+      choices.checked === userChoices[currentQuestion].value;
+      choices.disabled = true; // Disable the radio button
+    }
+
   }
+  // choices.disabled = false
+
 });
 
 function showPreviousQuestion() {
   currentQuestion--;
   loadQuestion();
 }
- if (currentQuestion === questions.length) {
+if (currentQuestion === questions.length) {
+  
 
-    quiz.innerHTML = `<h2>You answered ${score} out of ${questions.length} correctly</h2>
+  quiz.innerHTML = `<h2>You answered ${score} out of ${questions.length} correctly</h2>
     <button onclick = "location.reload()">Reload</button>`
-  }
+}
 
-  else {
+else {
 
-    loadQuestion();
-  }
+  loadQuestion();
+}
 
-
-  for (let i = 0; i < choices.length; i++) {
-    choices[i].checked = false;
-  }
-
-prev.addEventListener("click",showPreviousQuestion)
+prev.addEventListener("click", showPreviousQuestion)
 
 
 function shuffleQuestions() {
