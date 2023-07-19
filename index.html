@@ -14,22 +14,16 @@
 
   <div class="container">
     <div id="box">
-    <form id="formsubmit">
-      
-     
-      <input type="text" id="username" placeholder="Enter Username:" />
-        
-      
-      <input type="email" id="emailId" placeholder="Enter Username:" required />
-        <!-- </li> -->
-      <button id="btn" type="submit">Start Quiz</button>
-      <!-- </ul> -->
-    </form>
+      <form id="formsubmit">
+        <input type="text" id="username" placeholder="Enter Username:" />
+        <input type="email" id="emailId" placeholder="Enter Email:" required />
+        <button id="btn" type="submit">Start Quiz</button>
+      </form>
     </div>
     <div id="box-quiz" style="display: none;">
       <div id="quiz">
         <h2 id="question"></h2>
-        
+
         <h3 id="userDisplay"></h3>
         <ul id="choices">
           <li><input type="radio" name="choice" value="0"><span id="choice1"></span></li>
@@ -39,8 +33,12 @@
         </ul>
 
         <button id="submit" type="submit">SUBMIT</button>
+        <div class="prev">
+          <button id="prevB">PREV</button>
+        </div>
       </div>
     </div>
+    <div class="table-result"></div>
   </div>
   <script src="main.js"></script>
 </body>
